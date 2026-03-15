@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Basic Stock Analysis</title>
+    <!-- Modern font -->
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <!-- Chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}?v=2">
+</head>
+<body data-theme="light">
+    
+    <nav class="navbar">
+        <div class="logo">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" class="logo-icon"><path d="M12 2L2 22h20L12 2z" fill="currentColor"/></svg>
+            <span>LuminaStocks</span>
+        </div>
+        <div class="nav-controls">
+            <button id="themeToggle" class="btn-icon">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="moon-icon"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path></svg>
+            </button>
+        </div>
+    </nav>
+
+    <main class="container">
+        
+        <header class="hero">
+            <h1>Basic Stock Analysis</h1>
+            <p>Enter a US stock ticker to generate an intuitive efficiency radar and financial breakdown.</p>
+            
+            <div class="mode-toggle">
+                <label>
+                    <input type="radio" name="analysisMode" value="single" checked> Single Stock
+                </label>
+                <label>
+                    <input type="radio" name="analysisMode" value="compare"> Compare Two Stocks
+                </label>
+            </div>
+
+            <div class="search-box" id="searchBox">
+                <input type="text" id="tickerInput1" placeholder="Stock 1 (e.g. AAPL)">
+                <input type="text" id="tickerInput2" placeholder="Stock 2 (e.g. MSFT)" class="hidden">
+                <button id="analyzeBtn" class="btn-primary">Analyze</button>
+            </div>
+
+            <div class="preferences">
+                <label for="riskPreference">Beta Risk Preference:</label>
+                <select id="riskPreference">
+                    <option value="conservative">Conservative (Lower risk is better)</option>
+                    <option value="aggressive">Aggressive (Higher return potential is better)</option>
+                </select>
+            </div>
+            
+            <div id="loading" class="loading-spinner hidden">
+                <div class="spinner"></div>
+                <p>Analyzing financial data...</p>
+            </div>
+            
+            <div id="errorMessage" class="error-msg hidden"></div>
+        </header>
+
+        <section id="resultsContainer" class="results-container hidden">
+            
+            <div class="chart-section glass-card">
+                <h2>Efficiency Radar</h2>
+                <div class="chart-wrapper">
+                    <div id="chartLegend" class="chart-legend hidden">
+                        <span class="legend-item"><span class="legend-color badge-stock1"></span> Stock 1</span>
+                        <span class="legend-item"><span class="legend-color badge-stock2"></span> Stock 2</span>
+                    </div>
+                    <canvas id="radarChart"></canvas>
+                </div>
+            </div>
+
+            <div class="table-section glass-card">
+                <h2>Financial Metrics</h2>
+                <div class="table-responsive">
+                    <table id="metricsTable">
+                        <thead>
+                            <tr id="tableHeaderRow">
+                                <!-- JS will populate based on mode -->
+                                <th>Metric</th>
+                                <th>Actual Value</th>
+                                <th>Ideal Range</th>
+                                <th>Status</th>
+                            </tr>
+                        </thead>
+                        <tbody id="tableBody">
+                            <!-- Populated by JS -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+        </section>
+
+    </main>
+
+    <script src="{{ url_for('static', filename='script.js') }}?v=2"></script>
+</body>
+</html>
