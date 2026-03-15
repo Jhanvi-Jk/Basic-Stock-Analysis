@@ -46,11 +46,13 @@
             </div>
 
             <div class="preferences">
-                <label for="riskPreference">Beta Risk Preference:</label>
-                <select id="riskPreference">
-                    <option value="conservative">Conservative (Lower risk is better)</option>
-                    <option value="aggressive">Aggressive (Higher return potential is better)</option>
-                </select>
+                <span style="font-weight: 500; margin-right: 0.5rem; color: var(--text-secondary);">Beta Risk Preference:</span>
+                <label>
+                    <input type="radio" name="riskPreference" value="conservative" checked> Conservative (Lower risk)
+                </label>
+                <label>
+                    <input type="radio" name="riskPreference" value="aggressive"> Aggressive (Higher return)
+                </label>
             </div>
             
             <div id="loading" class="loading-spinner hidden">

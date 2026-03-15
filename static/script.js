@@ -12,7 +12,6 @@ themeToggle.addEventListener('click', () => {
 const tickerInput1 = document.getElementById('tickerInput1');
 const tickerInput2 = document.getElementById('tickerInput2');
 const analyzeBtn = document.getElementById('analyzeBtn');
-const riskPreference = document.getElementById('riskPreference');
 const loading = document.getElementById('loading');
 const errorMessage = document.getElementById('errorMessage');
 const resultsContainer = document.getElementById('resultsContainer');
@@ -76,13 +75,20 @@ const metricsConfig = [
 let currentData = null; // Store fetched data
 
 analyzeBtn.addEventListener('click', analyzeStock);
-tickerInput.addEventListener('keypress', (e) => {
+tickerInput1.addEventListener('keypress', (e) => {
     if (e.key === 'Enter') analyzeStock();
 });
-riskPreference.addEventListener('change', () => {
-    if (currentData) {
-        processAndRender(currentData);
-    }
+tickerInput2.addEventListener('keypress', (e) => {
+    if (e.key === 'Enter') analyzeStock();
+});
+
+const riskRadios = document.querySelectorAll('input[name="riskPreference"]');
+riskRadios.forEach(radio => {
+    radio.addEventListener('change', () => {
+        if (currentData) {
+            processAndRender(currentData);
+        }
+    });
 });
 
 async function analyzeStock() {
@@ -163,7 +169,7 @@ function normalizeScore(key, value, metrics) {
             if (value > 200) return 0;
             return Math.max(0, 100 - (value / 2));
         case 'beta':
-            const pref = riskPreference.value;
+            const pref = document.querySelector('input[name="riskPreference"]:checked').value;
             if (pref === 'conservative') {
                 // Lower is better
                 if (value < 0.5) return 100;
@@ -192,8 +198,8 @@ function checkOutsideIdeal(key, value) {
         case 'inventory_spread': return value >= 0.5;
         case 'debt_to_equity': return value >= 100;
         case 'beta': 
-            const pref = riskPreference.value;
-            if (pref === 'conservative') return value > 1.2;
+            const pref2 = document.querySelector('input[name="riskPreference"]:checked').value;
+            if (pref2 === 'conservative') return value > 1.2;
             return value < 0.8;
         default: return false;
     }
