@@ -82,13 +82,18 @@ tickerInput2.addEventListener('keypress', (e) => {
     if (e.key === 'Enter') analyzeStock();
 });
 
-const riskRadios = document.querySelectorAll('input[name="riskPreference"]');
-riskRadios.forEach(radio => {
-    radio.addEventListener('change', () => {
-        if (currentData) {
-            processAndRender(currentData);
-        }
-    });
+const riskSlider = document.getElementById('riskSlider');
+const riskLabel = document.getElementById('riskLabel');
+
+riskSlider.addEventListener('input', (e) => {
+    const val = e.target.value;
+    if (val === '1') riskLabel.textContent = 'Conservative';
+    else if (val === '2') riskLabel.textContent = 'Balanced';
+    else if (val === '3') riskLabel.textContent = 'Aggressive';
+    
+    if (currentData) {
+        processAndRender(currentData);
+    }
 });
 
 async function analyzeStock() {
@@ -169,17 +174,24 @@ function normalizeScore(key, value, metrics) {
             if (value > 200) return 0;
             return Math.max(0, 100 - (value / 2));
         case 'beta':
-            const pref = document.querySelector('input[name="riskPreference"]:checked').value;
-            if (pref === 'conservative') {
+            const pref = document.getElementById('riskSlider').value;
+            if (pref === '1') { // Conservative
                 // Lower is better
                 if (value < 0.5) return 100;
                 if (value > 2.0) return 0;
                 return Math.max(0, 100 - ((value - 0.5) * 66));
-            } else {
+            } else if (pref === '3') { // Aggressive
                 // Aggressive, higher is better
                 if (value > 1.5) return 100;
                 if (value < 0.5) return 0;
                 return Math.min(100, (value - 0.5) * 100);
+            } else { // Balanced (2)
+                // Middle values are best (close to 1.0)
+                if (value < 0.5 || value > 2.0) return 30; // Not ideal either way
+                if (value >= 0.8 && value <= 1.2) return 100;
+                // Scale down linearly from 100 to 30 based on distance from 1.0
+                const distance = Math.abs(value - 1.0);
+                return Math.max(0, 100 - (distance * 100));
             }
         default:
             return 50;
@@ -198,9 +210,10 @@ function checkOutsideIdeal(key, value) {
         case 'inventory_spread': return value >= 0.5;
         case 'debt_to_equity': return value >= 100;
         case 'beta': 
-            const pref2 = document.querySelector('input[name="riskPreference"]:checked').value;
-            if (pref2 === 'conservative') return value > 1.2;
-            return value < 0.8;
+            const pref2 = document.getElementById('riskSlider').value;
+            if (pref2 === '1') return value > 1.2; // Conservative dislikes > 1.2
+            if (pref2 === '3') return value < 0.8; // Aggressive dislikes < 0.8
+            return value < 0.5 || value > 1.5;     // Balanced dislikes extremes
         default: return false;
     }
 }
