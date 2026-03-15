@@ -31,12 +31,15 @@
             <p>Enter a US stock ticker to generate an intuitive efficiency radar and financial breakdown.</p>
             
             <div class="mode-toggle">
-                <label>
-                    <input type="radio" name="analysisMode" value="single" checked> Single Stock
-                </label>
-                <label>
-                    <input type="radio" name="analysisMode" value="compare"> Compare Two Stocks
-                </label>
+                <div class="toggle-container">
+                    <input type="radio" id="modeSingle" name="analysisMode" value="single" checked>
+                    <label for="modeSingle">Single Stock</label>
+
+                    <input type="radio" id="modeCompare" name="analysisMode" value="compare">
+                    <label for="modeCompare">Compare Two Stocks</label>
+
+                    <div class="toggle-pill"></div>
+                </div>
             </div>
 
             <div class="search-box" id="searchBox">
